@@ -3,23 +3,60 @@
     1.菜单menu
         
     2.画板工具：
-        设置开关，接受事件传播下来
-        可用开关
-
         1.画笔
         2.形状（线，圆，矩形）
         3.文本
         4.橡皮
+        5.抓取，滚动
+        6.撤销
+        7.
+        键盘输入开关，接受键盘事件传播下来
+        鼠标输入开关，接受鼠标事件传播下来
+        滚动监听开关，接受滚动事件传播下来
+        可用开关,标识工具禁用和启用
+        选中开关，标识工具是否正在使用
         
-        几个回调函数：
-        1.mousedown如何创建
-        2.mousemove如何动作
-        3.mouseup如何动作
+        工具名
+        类型：暂时为操作类型和画图类型(op,draw)
+        属性：画图类型的属性为svg元素属性
+        
+        元素容器，存储工具创建的svg元素
+        eles:{
+            "last": null,
+            "cur": null
+        }
+
+        位置记录容器，存储工具点击位置信息
+        poss: {
+            "last": {},
+            "cur": {}
+        }
+
+        元素dom
 
         提供几个函数：
-        1.工具被选中：choosed(choosed)
-        2.工具是可用：useable(true)
-        3.工具是否可用: isUseable()
+        1.onmousedown
+        2.onmousemove
+        3.onmouseup
+        4.oninputup
+        5.oninputdwon
+        7.onscroll
+        8.choose
+
+        =====分割符=====上述都是画布触发事件后回调工具对应函数
+        9.iconActive
+
+        =====分割符=====
+        0.onmousedownSelf
+        10.onmousemoveSelf
+        11.onmouseupSelf
+
+        =====分割符=====上述都是工具本身触发事件回调函数
+        12.initHtml
+        13.html
+
+        =====分割符=====
+        14.inputChoose，判断输入命令是否选中当前工具
 
     3.Svg元素:
         属性：
@@ -75,30 +112,3 @@
             主题：
                 颜色
                 背景
-
-![img.png](img.png)
-
-
-{
-    "type": "new_svg_ele",
-    "data": {
-        "tag": "path",
-        "id": "{uid}{timestamp}",
-        "toolName": "pencil",
-        "attr": {}
-    }
-}
-{
-    "type": "update_svg_ele",
-    "data": {
-        "id": "{uid}{timestamp}",
-        "attr": {}
-    }
-}
-
-{
-    "type": "delete_svg_ele",
-    "data": {
-        "id": "{uid}{timestamp}"
-    }
-}
