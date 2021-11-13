@@ -11,9 +11,13 @@ function registerGlobleKeyBoardEvent() {
             for(var name in keyNames){
                 window.EVENT_FLAGS[name] = true;
             }
+            if(event.ctrlKey) {
+                window.EVENT_FLAGS["ctrl_left"] = true;
+                window.EVENT_FLAGS["ctrl_right"] = true;
+            }
 
             window.EVENT_FLAGS["key_down"] = true;
-            drawToolOnInputdown(event, undefined);
+            drawToolOnInputdown(event);
         }
     });
     $(document).keyup(function(event){ //监听键盘弹起时的事件
@@ -26,6 +30,10 @@ function registerGlobleKeyBoardEvent() {
             keyNames = keyNames.split("|");
             for(var name in keyNames){
                 window.EVENT_FLAGS[name] = false;
+            }
+            if(!event.ctrlKey) {
+                window.EVENT_FLAGS["ctrl_left"] = false;
+                window.EVENT_FLAGS["ctrl_right"] = false;
             }
             window.EVENT_FLAGS["key_down"] = false;
             drawToolOnInputup(event, undefined);

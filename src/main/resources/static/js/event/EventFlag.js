@@ -40,7 +40,7 @@ window.EVENT_FLAGS = $.EVENT_FLAGS = {
     "8": false,
     "9": false,
     "ctrl_left": false,
-    "white_keycode": [67, 69, 76, 80, 82, 84],
+    "white_keycode": [17, 67, 68, 69, 71, 76, 80, 82, 84, 90],
     "black_keycode": [],
 }
 

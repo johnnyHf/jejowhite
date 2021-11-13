@@ -61,60 +61,11 @@ window.WITE_BOARD_ONINE_ACTIONS = {
         }
     };
 
-    OnlineAction.createNewSvgEle = function (arg) {
-        var tag = arg.tag;
-        var svgEle = arg.svgEle;
-        var tool_name = arg.tool_name;
-        var attrList = ["id","class","fill","stroke-linejoin","stroke-width","stroke","d","font-size","font-family","cx","cy"];
-        var attr = {};
-        for(var a of attrList) {
-            var atr = svgEle.attr(a);
-            if(atr) {
-                attr[a] = atr;
-            }
-        }
-        witeboardClient.sendMsg({
-            "type": 11,
-            "msg": {
-                "data": {
-                    "tag": tag,
-                    "tool_name": tool_name,
-                    "attr": attr
-                }
-            }
-        });
-    };
-    OnlineAction.updateSvgEle = function (arg) {
-        witeboardClient.sendMsg({
-            "type": 12,
-            "msg": {
-                "data": {
-                    "id": arg.id,
-                    "ops": arg.ops
-                }
-            }
-        });
-    };
-    OnlineAction.deleteSvgEle = function (arg) {
-        witeboardClient.sendMsg({
-            "type": 13,
-            "msg": {
-                "data": {
-                    "id": arg.id
-                }
-            }
-        });
-    };
-    OnlineAction.changeTheme = function (color) {
-        witeboardClient.sendMsg({
-            "type": 14,
-            "msg": {
-                "data": {
-                    "color": color
-                }
-            }
-        });
-    };
+    OnlineAction.sendMsg = function (type, arg) {
+        var msg = MsgManager.create(type, arg);
+        witeboardClient.sendMsg(msg);
+    }
+
     OnlineAction.set = function(names, v) {
         BaseUtil.set(window.WITE_BOARD_ONINE_ACTIONS, names, v)
     };

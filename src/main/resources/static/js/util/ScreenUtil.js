@@ -35,10 +35,12 @@
         //想要全屏展示的模块包含class名content
         var elem = document.querySelector(className);
         ScreenUtil.requestFullScreen(elem);
+        $(SelectorUtil.get("draw_board")).css("background-color", SettingUtil.get("settings|theme|color"));
     };
 
     ScreenUtil.closeBig = function() {
         ScreenUtil.exitFullScreen();
+        $(SelectorUtil.get("draw_board")).css("background-color", SettingUtil.get("settings|theme|color"));
     };
 
     //退出全屏

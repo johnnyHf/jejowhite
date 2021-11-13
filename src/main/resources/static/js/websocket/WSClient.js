@@ -13,7 +13,9 @@
             WS_newWite = 11,
             WS_updateWite = 12,
             WS_deleteWite = 13,
-            types = ["文本", "视频", "语音"],
+            WS_updateThemeColor = 14,
+            WS_clearAllsvgEle = 15,
+            types = ["文本", "视频", "语音", "画板操作"],
             getWebSocket = function(host) {
                 var socket;
                 if ('WebSocket' in window) {
@@ -51,6 +53,7 @@
                 var onclose = option.onclose,
                     type = types[option.type];
                 client.online = false;
+                BaseUtil.speckText("网络连接中断，请刷新或检查网络")
                 console.error('WebSocket已断开.');
                 console.error("%c类型：" + type, "color:rgb(228, 186, 20)");
                 onclose && onclose();
@@ -72,6 +75,8 @@
                     case WS_newWite:
                     case WS_updateWite:
                     case WS_deleteWite:
+                    case WS_updateThemeColor:
+                    case WS_clearAllsvgEle:
                     case WS_MsgToPoints:
                         option.wsonmessage && option.wsonmessage(msg);
                         break;

@@ -44,19 +44,43 @@ window.DEFAULT_WITE_BOARD_CONFIG = $.DEFAULT_WITE_BOARD_CONFIG = {
                 "value": "and|ctrl_left|Z"
             }
         },
+        "view_box": {
+            "keyboard": {
+                "value": "D"
+            }
+        },
+        "ele_picker": {
+            "keyboard": {
+                "value": "G"
+            }
+        },
     },
     "draw_board": {
         "line_color": "rgb(255, 211, 53)",
         "line_style": "solid", // (dashed,dotted,solid)
         "line_background": "",
         "line_join": "round",
+        "stroke_width": 5.3,
+        "eraser_size": 57,
+        "font_size": 57,
         "title": "",
         "cur_tool": "pencil",
-        "last_tool": "pencil"
+        "last_tool": "pencil",
+        "view_box": {x:0, y:0, offsetX: 0, offsetY: 0, width: 0, height:0, scale: 4},
+        "scales": [5,4,3,2,1,0.8,0.6,0.4,0.2]
     }
 }
 window.WITE_BOARD_CONFIG = $.WITE_BOARD_CONFIG = {};
 $.extend(true,window.WITE_BOARD_CONFIG, window.DEFAULT_WITE_BOARD_CONFIG);
+
+
+window.WITE_BOARD_ENUM = $.WITE_BOARD_ENUM = {
+    "MSG_NEW_SVG_ELE": 11,
+    "MSG_UPDATE_SVG_ELE": 12,
+    "MSG_DELETE_SVG_ELE": 13,
+    "MSG_UPDATE_THEME_COLOR": 14,
+    "MSG_CLEAR_ALL_SVG_ELE": 15,
+}
 
 window.DRAW_TOOL_SELECTOR = $.DRAW_TOOL_SELECTOR = {
     // 画图工具

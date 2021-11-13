@@ -19,6 +19,11 @@ function registerGlobalMouseEvents(svg) {
             window.EVENT_FLAGS["drag"] = false
             drawToolOnmouseup(e, {"pos": { x: e.offsetX, y: e.offsetY }, "svg": svg});
         })
+        $(document).on("mousewheel DOMMouseScroll", function (e) {
+            var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) ||  // chrome & ie
+                (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));              // firefox
+            drawToolOnScroll(e,{"delta":delta, "pos": { x: e.offsetX, y: e.offsetY }});
+        });
     } else {
         // 触屏设备
         svg.addEventListener('touchstart', function (e) {

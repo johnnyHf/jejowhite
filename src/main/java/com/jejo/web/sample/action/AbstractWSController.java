@@ -34,7 +34,7 @@ public abstract class AbstractWSController {
 	 */
 	protected void OnOpen(Session session, EndpointConfig config) {
 		getConnections().add(this);
-		broadcast2All(new Message(getUserName(), MsgConstant.Open, getUsers()).toString());
+		broadcast2Others(new Message(getUserName(), MsgConstant.Open, getUsers()).toString());
 		System.out.println(getConnectType() + ": " + getUserName() + "加入了，当前总人数：" + getConnections().size());
 	}
 
@@ -55,7 +55,6 @@ public abstract class AbstractWSController {
 	protected void OnMessage(String message) {
 		Message msg = JSONObject.parseObject(message, Message.class);
 		msg.setHost(getUserName());
-		System.out.println(msg);
 		if (getConnectType().equals("text")) {
 			msg.setMsg(StringUtil.txt2htm(msg.getMsg()));
 			if (msg.getDests() == null) {
@@ -89,6 +88,7 @@ public abstract class AbstractWSController {
 	 * @param msg
 	 */
 	protected <T> void broadcast2All(T msg) {
+		int i = 0;
 		for (AbstractWSController client : getConnections())
 		{
 			client.call(msg);
@@ -112,13 +112,10 @@ public abstract class AbstractWSController {
 	 * @param msg
 	 */
 	protected <T> void broadcast2Others(T msg) {
-		int i = 0;
 		for (AbstractWSController client : getConnections()){
 			if (!client.getUserName().equals(this.getUserName()))
 				client.call(msg);
 		}
-
-
 	}
 
 	/**

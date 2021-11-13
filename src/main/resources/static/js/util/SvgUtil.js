@@ -16,7 +16,7 @@
         }
         return svgEles;
     };
-    SvgUtil.create = function (tool, tag, attr) {
+    SvgUtil.create = function (tag, attr) {
         if(!document.createElementNS) return;//防止IE8报错
         var $svg = $(document.createElementNS('http://www.w3.org/2000/svg', tag));
         for(var key in attr) {
@@ -28,15 +28,6 @@
                     $svg.attr(key, attr[key]);
             }
         }
-        if(tool) { // 如果传入tool证明是用户自己创建的，而不是通过获取的消息创建的
-            var uuid = witeboardClient.option.userName + "-" + new Date().getTime();
-            $svg.attr("id", uuid)
-            OnlineAction.createNewSvgEle({
-                "tool_name": tool.name,
-                "tag": tool.svgType,
-                "svgEle": $svg
-            });
-        }
         return $svg;
     };
     /**
@@ -46,18 +37,12 @@
      * @param svgEle
      * @param ops
      */
-    SvgUtil.update = function (svgEle, ops, fromServer) {
+    SvgUtil.update = function (svgEle, ops) {
         if(!ops){
             return;
         }
         for(var op of ops){
             SvgUtil.update0(svgEle, op);
-        }
-        if(!fromServer) {
-            OnlineAction.updateSvgEle({
-                "id": svgEle.attr("id"),
-                "ops": ops
-            });
         }
     }
     SvgUtil.update0 = function (svgEle, op) {
@@ -82,13 +67,7 @@
                 break;
         }
     }
-    SvgUtil.remove = function (ele, fromServer) {
-        if(!fromServer) {
-            OnlineAction.deleteSvgEle({
-                "id": ele.attr("id")
-            });
-        }
-
+    SvgUtil.remove = function (ele) {
         ele.remove();
     };
     SvgUtil.fn.init.prototype = SvgUtil.fn;

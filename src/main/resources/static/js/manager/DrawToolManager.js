@@ -2,10 +2,8 @@ window.DRAW_TOOL_MANAGER = $.DRAW_TOOL_MANAGER = {
 
 }
 
-
 function initDrawTool() {
     var drawToolContainer = $(".toolbar-draw");
-
     registerDrawTool("undo", new $.Undo({"container":drawToolContainer}));
     registerDrawTool("eraser", new $.Eraser({"container":drawToolContainer}));
     registerDrawTool("text", new $.Text({"container":drawToolContainer}));
@@ -13,8 +11,11 @@ function initDrawTool() {
     registerDrawTool("pencil", new $.Pencil({"container":drawToolContainer}));
     registerDrawTool("shape_circle", new $.ShapeCircle({"container":drawToolContainer}));
     registerDrawTool("shape_rect", new $.ShapeRect({"container":drawToolContainer}));
+    registerDrawTool("view_box", new $.ViewBox({"container":drawToolContainer}));
+    registerDrawTool("ele_picker", new $.ElePicker({"container":drawToolContainer}));
     setAllDrawToolMouseSwitch(true);
     setAllDrawToolInputSwitch(true);
+    // setDrawToolScrollSwitch("view_box", true, "all");
     chooseDrawTool("pencil", true, "all");
 }
 
@@ -40,7 +41,7 @@ function initDrawToolAction() {
 
     // 撤销
     $(SelectorUtil.get("undo_tool")).bind("click", function (e){
-        opPop();
+        opPop(null, true);
     });
 
 
@@ -49,8 +50,9 @@ function initDrawToolAction() {
         $(".clear-modal").addClass("clear-modal-active");
     });
     $(SelectorUtil.get("clear_tool_accept")).bind("click", function (e){
-        opClearAll();
         $(".clear-modal").removeClass("clear-modal-active");
+        opClearAll();
+        OnlineAction.sendMsg(window.WITE_BOARD_ENUM.MSG_CLEAR_ALL_SVG_ELE, {});
     });
     $( SelectorUtil.get("clear_tool_cancel")).bind("click", function (e){
         $(".clear-modal").removeClass("clear-modal-active");
@@ -78,7 +80,7 @@ function getDrawTool(name){
 
 function chooseAllDrawTool(choosed) {
     for(var tool_name in window.DRAW_TOOL_MANAGER) {
-        getDrawTool(tool_name).choose(choosed);
+        getDrawTool(tool_name).choose0(choosed);
     }
 }
 
@@ -92,13 +94,13 @@ function chooseDrawTool(name, choosed, conflictNames) {
         for(var n in names){
             var t = window.DRAW_TOOL_MANAGER[n];
             if(t){
-                t.choose(!choosed);
+                t.choose0(!choosed);
             }
         }
     }
 
     if(tool) {
-        tool.choose(choosed);
+        tool.choose0(choosed);
     }
 }
 
@@ -174,9 +176,34 @@ function setDrawToolInputSwitch(name, s, conflictNames) {
             }
         }
     }
-
     if(tool) {
         tool.setInputSwitch(s);
+    }
+}
+
+
+function setAllDrawToolScrollSwitch(s) {
+    for(var tool_name in window.DRAW_TOOL_MANAGER) {
+        getDrawTool(tool_name).setScrollSwitch(s);
+    }
+}
+
+function setDrawToolScrollSwitch(name, s, conflictNames) {
+    var tool = window.DRAW_TOOL_MANAGER[name];
+
+    if(conflictNames === "all"){
+        setAllDrawToolScrollSwitch(!s)
+    }else if(conflictNames){
+        var names = conflictNames.split(",");
+        for(var n in names){
+            var t = window.DRAW_TOOL_MANAGER[n];
+            if(t){
+                t.setScrollSwitch(!s);
+            }
+        }
+    }
+    if(tool) {
+        tool.setScrollSwitch(s);
     }
 }
 
@@ -185,6 +212,9 @@ function appendEle2Svg(arg) {
     var svgEle = arg.svgEle;
     var tool_name = arg.tool_name;
     if(svgEle){
+        if(arg.text) {
+            svgEle.text(arg.text);
+        }
         svgEle.appendTo(svg);
         opPush({
             "operation": tool_name,
@@ -237,9 +267,18 @@ function drawToolOnInputup(e, arg) {
 function drawToolOnInputdown(e, arg) {
     for(var tool_name in window.DRAW_TOOL_MANAGER) {
         var tool = getDrawTool(tool_name);
-        tool.choose(false);
+        tool.choose0(false);
         if(tool && tool.inputSwitch()) {
             tool.oninputdown0(e, arg);
+        }
+    }
+}
+
+function drawToolOnScroll(e, arg) {
+    for(var tool_name in window.DRAW_TOOL_MANAGER) {
+        var tool = getDrawTool(tool_name);
+        if(tool && tool.scrollSwitch()) {
+            tool.onscroll0(e, arg);
         }
     }
 }

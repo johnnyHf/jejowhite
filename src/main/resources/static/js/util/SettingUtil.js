@@ -9,20 +9,28 @@
         }
     };
     SettingUtil.changeTheme = function (color) {
-        $(SelectorUtil.get("color_items")).toggleClass("blackboard");
-        $(SelectorUtil.get("draw_board")).toggleClass("blackboard");
+        if(isSimilarColor(rgb2Hex(SettingUtil.get("settings|theme|color", color)),  rgb2Hex(color), 0.5)){
+            return;
+        }
+        $(SelectorUtil.get("draw_board")).css("background-color", color);
         var color_similar_threshold = SettingUtil.get("settings|color_similar_threshold");
         var colorNowSpan = $(".footer-color-state span");
         var colorNow = colorNowSpan.css("background-color");
+
+        $(SelectorUtil.get("theme_btn")).toggleClass("toolbar-menu-popover-dark-mode-active");
+        $(SelectorUtil.get("color_items")).toggleClass("blackboard");
+        $(SelectorUtil.get("draw_board")).toggleClass("blackboard");
+
         colorNowSpan.css("background-color", getReverseColorAgainstTheme(colorNow, color, color_similar_threshold));
         SettingUtil.set("settings|theme|color", color);
+
         var opStacks = getAllOp();
         for(var s of opStacks) {
             var stroke = s["ele"].attr("stroke");
             SvgUtil.update(s["ele"], [{
                 "attr": "fill",
                 "opera": "update",
-                "value": color
+                "value": s["name"] === "eraser" ? color : getReverseColorAgainstTheme(stroke, color, color_similar_threshold)
             },
             {
                 "attr": "stroke",

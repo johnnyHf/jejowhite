@@ -5,7 +5,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+    <meta name="x5-orientation" content="portrait">
     <meta property="og:title" content="Witeboard">
     <meta content="Witeboard is the fastest way to collaborate real-time with your team anywhere." name="description">
     <meta property="keywords"
@@ -23,7 +23,11 @@
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0">
     <link rel="shortcut icon" href="https://witeboard.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="css/reset.css" />
     <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <style>
+
+    </style>
     <script rel="stylesheet" type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
 
 </head>
@@ -31,6 +35,7 @@
 <body>
 <div id="main" class="main">
     <div class="drawing-board" style="height: 911px;">
+
         <div class="toolbar clearfix">
             <div class="toolbar-header clearfix">
                 <div class="toolbar-menu">
@@ -105,8 +110,6 @@
                 </div>
             </div>
             <div class="toolbar-draw clearfix">
-
-
                 <div class="footer-color clearfix">
                     <div class="footer-color-state"><span style="background-color: rgb(255, 211, 53);"></span></div>
                     <div class="footer-color-selector clearfix hidden">
@@ -124,7 +127,8 @@
                              style="background-color: rgb(106, 70, 250);"></div>
                         <div class="footer-color-selector-item" title="Lavender"
                              style="background-color: rgb(176, 93, 217);"></div>
-                        <div class="footer-color-selector-item" title="Onyx"
+                        <div class="footer-color-selector-
+                        item" title="Onyx"
                              style="background-color: rgb(34, 34, 34);"></div>
                     </div>
                 </div>
@@ -350,21 +354,25 @@
 <script rel="stylesheet" type="text/javascript" src="js/component/ShapeCircle.js"></script>
 <script rel="stylesheet" type="text/javascript" src="js/component/ShapeRect.js"></script>
 <script rel="stylesheet" type="text/javascript" src="js/component/Undo.js"></script>
+<script rel="stylesheet" type="text/javascript" src="js/component/ViewBox.js"></script>
+<script rel="stylesheet" type="text/javascript" src="js/component/ElePicker.js"></script>
 
-
-<script rel="stylesheet" type="text/javascript" src="js/manager/DrawToolManager.js"></script>
-<script rel="stylesheet" type="text/javascript" src="js/manager/MenuManager.js"></script>
-
-<script rel="stylesheet" type="text/javascript" src="js/action/OnlineAction.js"></script>
-<script rel="stylesheet" type="text/javascript" src="js/action/LocalAction.js"></script>
 
 <script rel="stylesheet" type="text/javascript" src="js/event/MouseEvent.js"></script>
 <script rel="stylesheet" type="text/javascript" src="js/event/KeyboardEvent.js"></script>
 
-
+<script type="text/javascript" src="js/websocket/msgHandler.js"></script>
 <script type="text/javascript" src="js/websocket/media.js"></script>
 <script type="text/javascript" src="js/websocket/WSClient.js"></script>
-<script type="text/javascript" src="js/websocket/chat.js"></script>
+<script type="text/javascript" th:inline="javascript" src="js/websocket/chat.js"></script>
+
+<script rel="stylesheet" type="text/javascript" src="js/manager/DrawToolManager.js"></script>
+<script rel="stylesheet" type="text/javascript" src="js/manager/MenuManager.js"></script>
+<script rel="stylesheet" type="text/javascript" src="js/manager/MsgManager.js"></script>
+
+
+<script rel="stylesheet" type="text/javascript" src="js/action/OnlineAction.js"></script>
+<script rel="stylesheet" type="text/javascript" src="js/action/LocalAction.js"></script>
 
 <script rel="stylesheet" type="text/javascript" src="js/Main.js"></script>
 <!--<script type="text/javascript" src="js/websocket/app.js"></script>-->

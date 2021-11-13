@@ -1,43 +1,41 @@
 (function (window) {
     var Text = function (arg) {
         DrawTool.call(this, arg)
-        this.name = "text";
-        this.svgType = "text";
-        this.strokeWidth = "57";
-        this.fontFamily = "Microsoft YaHei";
-        this.properties = {
-            "fill": "",
-            "font-size": "",
-            "font-family": "Microsoft YaHei",
-        };
-        this.lastInput = null;
-        this.initHtml(arg)
+        this.initTool(arg)
     }
     Text.prototype = new DrawTool()
     Text.prototype.constructor = Text
+    Text.prototype.initTool = function (arg) {
+        this.name = "text";
+        this.type = "draw::text";
+        this.properties = {
+            "fill": "",
+            "font-size": SettingUtil.get("draw_board|eraser_size"),
+            "font-family": "Microsoft YaHei",
+        };
+        this.lastInput = null;
+        this.initHtml(arg);
+    }
 
     Text.prototype.onmousedown = function (e, arg) {
         var fillColor = SettingUtil.get("settings|theme|color");
         var stroke = SettingUtil.get("draw_board|line_color");
         var similar = SettingUtil.get("settings|color_similar_threshold");
-        var pos = arg.pos;
 
         this.properties["fill"] = getReverseColorAgainstTheme(stroke, fillColor, similar);
         this.properties["stroke"] = getReverseColorAgainstTheme(stroke, fillColor, similar);
-        this.properties["font-size"] = this.strokeWidth;
-        this.properties["font-family"] = this.fontFamily;
+        this.properties["font-size"] = SettingUtil.get("draw_board|eraser_size");
 
-        this.svgEle = SvgUtil.create(this, this.svgType, this.properties);
+        this.eles.cur = SvgUtil.create(this.getType(), this.properties);
     };
     Text.prototype.onmousemove = function (e, arg) {
 
     };
     Text.prototype.onmouseup = function (e, arg) {
-        var pos = this.lastPos;
+        var pos = this.poss.last;
         this.clickTextInput(arg.svg, pos, $(".drawing-board:first"));
     };
     Text.prototype.createTextInput = function (container, pos, callbacks) {
-        var that = this;
         var styles = {
             "position": 'absolute',
             "z-index": 1000,
@@ -48,7 +46,7 @@
 
         var spanStyles = {
             "color": SettingUtil.get("draw_board|line_color"),
-            "font-size": this.strokeWidth + "px",
+            "font-size": this.properties["font-size"] + "px",
             "width": '100%',
         };
         var input = $("<input autoFocus class=\"text-input\"/>");
@@ -84,14 +82,16 @@
     };
     Text.prototype.clickTextInput = function (svg, pos, inputContainer){
         var that = this;
-        SvgUtil.update(this.svgEle, [{
+        var updateOps = [{
             "attr":"x", "opera": "update", "value": pos.x
         },{
             "attr":"y", "opera": "update", "value": pos.y
-        }])
+        }]
+        SvgUtil.update(this.eles.cur, updateOps)
+        OnlineAction.sendMsg(window.WITE_BOARD_ENUM.MSG_UPDATE_SVG_ELE, {"id": this.eles.cur.attr("id"), "ops": updateOps});
         function onInput(e, $this){
-            OnlineAction.updateSvgEle({
-                "id": that.lastSvgEle.attr("id"),
+            OnlineAction.sendMsg(window.WITE_BOARD_ENUM.MSG_UPDATE_SVG_ELE, {
+                "id": that.eles.last.attr("id"),
                 "ops": [
                     {"attr":"", "opera":"text", "value":  $this.val().replace(/(^\s*)|(\s*$)/g, "").trim()}
                 ]
@@ -105,15 +105,16 @@
 
             if(input.trim().length <= 0){
                 opPop({
-                    "svgEle": that.lastSvgEle
-                });
-                OnlineAction.deleteSvgEle({
-                    "id": that.lastSvgEle.attr("id")
-                })
+                    "svgEle": that.eles.last
+                }, true);
             }else{
-                SvgUtil.update(that.lastSvgEle, [
-                    {"attr":"", "opera":"text", "value": input.trim()}
-                ])
+                BaseUtil.speckText(input.trim());
+                var ops = [{"attr":"", "opera":"text", "value": input.trim()}]
+                SvgUtil.update(that.eles.last, ops)
+                OnlineAction.sendMsg(window.WITE_BOARD_ENUM.MSG_UPDATE_SVG_ELE, {
+                    "id": that.eles.last.attr("id"),
+                    "ops": ops
+                });
             }
             that.lastInput.remove();
         }
@@ -122,21 +123,21 @@
 
             if(input.trim().length <= 0){
                 opPop({
-                    "svgEle": that.lastSvgEle
-                });
-                OnlineAction.deleteSvgEle({
-                    "id": that.lastSvgEle.attr("id")
-                })
+                    "svgEle": that.eles.last
+                }, true);
             }else{
-                SvgUtil.update(that.lastSvgEle, [
-                    {"attr":"", "opera":"text", "value": input.trim()}
-                ])
+                var ops = [{"attr":"", "opera":"text", "value": input.trim()}]
+                SvgUtil.update(that.eles.last, ops)
+                OnlineAction.sendMsg(window.WITE_BOARD_ENUM.MSG_UPDATE_SVG_ELE, {
+                    "id": that.eles.cur.attr("id"),
+                    "ops": ops
+                });
             }
 
             that.lastInput.remove();
         }
 
-        this.lastSvgEle = this.svgEle;
+        this.eles.last = this.eles.cur;
         this.lastInput = this.createTextInput(inputContainer, pos, {
             "onInput": onInput,
             "onKeyDown": onKeyDown,

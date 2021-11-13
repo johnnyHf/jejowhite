@@ -1,5 +1,7 @@
 package com.jejo.web.sample.util;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 
 public class StringUtil {
@@ -143,5 +145,20 @@ public class StringUtil {
 			if (s.equals(str))
 				return true;
 		return false;
+	}
+
+	public static ByteBuffer str2bb(String msg, Charset charset){
+		return ByteBuffer.wrap(msg.getBytes(charset));
+	}
+
+	public static String bb2str(ByteBuffer buffer, Charset charset){
+		byte[] bytes;
+		if(buffer.hasArray()) {
+			bytes = buffer.array();
+		} else {
+			bytes = new byte[buffer.remaining()];
+			buffer.get(bytes);
+		}
+		return new String(bytes, charset);
 	}
 }

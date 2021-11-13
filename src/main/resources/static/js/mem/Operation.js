@@ -16,13 +16,15 @@ function opPush(arg) {
     });
 }
 
-function opPop(options, fromServer) {
+function opPop(options, sendToOthers) {
     var op_stack = getAllOp();
+    var id = null;
     if(options){
         if(options["svgEle"]){
             for(var i=op_stack.length-1;i>=0;i--){
                 if(op_stack[i]['ele'] === options["svgEle"]){
-                    SvgUtil.remove(op_stack[i]['ele'], fromServer);
+                    id = op_stack[i]['ele'].attr("id")
+                    SvgUtil.remove(op_stack[i]['ele']);
                     op_stack.splice(i,1);
                     break;
                 }
@@ -30,7 +32,8 @@ function opPop(options, fromServer) {
         }else if(options["id"]){
             for(var i=op_stack.length-1;i>=0;i--){
                 if(op_stack[i]['ele'].attr("id") === options["id"]){
-                    SvgUtil.remove(op_stack[i]['ele'], fromServer);
+                    id = op_stack[i]['ele'].attr("id")
+                    SvgUtil.remove(op_stack[i]['ele']);
                     op_stack.splice(i,1);
                     break;
                 }
@@ -39,8 +42,15 @@ function opPop(options, fromServer) {
     }else{
         if(op_stack.length > 0){
             var e = op_stack.pop();
+            id = e["ele"].attr("id")
             SvgUtil.remove(e["ele"]);
         }
+    }
+
+    if(id != null && sendToOthers) {
+        OnlineAction.sendMsg(window.WITE_BOARD_ENUM.MSG_DELETE_SVG_ELE, {
+            "id": id
+        })
     }
 
     if(op_stack.length === 0){
@@ -54,7 +64,6 @@ function opClearAll() {
         SvgUtil.remove(op_stack[i]['ele'])
         op_stack.splice(i,1)
     }
-    op_stack = [];
     window.WITE_BOARD_OP["stack"] = [];
     $(".empty-state").removeClass("empty-state-hidden");
 }

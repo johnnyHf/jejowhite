@@ -15,6 +15,8 @@ public class Message {
 
 	private RoomInfo roomInfo;// 聊天室信息
 
+	private WiteBoard witeBoard;// 画板信息
+
 	public class MsgConstant {
 		public final static int Open = 1;// 新连接
 		public final static int Close = 2;// 连接断开
@@ -22,6 +24,12 @@ public class Message {
 		public final static int MsgToPoints = 4;// 发送给指定用户
 		public final static int RequireLogin = 5;// 需要登录
 		public final static int setName = 6;// 设置用户名
+		public final static int initBoard = 7;// 初始化画板
+		public final static int MsgNewSvgEle = 11;// 新增svg元素
+		public final static int UpdateSvgEle = 12;// 更新svg元素属性
+		public final static int DeleteSvgEle = 13;// 删除svg元素
+		public final static int UpdateThemeColor = 14;// 修改背景色
+		public final static int ClearAllSvgEle = 15;// 修改背景色
 	}
 
 	public static class RoomInfo {
@@ -90,8 +98,8 @@ public class Message {
 
 	public String toString2() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Message [type=").append(type).append(", msg=").append(msg).append(", host=").append(host).append(", dests=").append(Arrays.toString(dests)).append(", roomInfo=")
-				.append(roomInfo).append("]");
+		builder.append("Message [type=").append(type).append(", msg=").append(msg).append(", host=").append(host).append(", dests=").append(Arrays.toString(dests)).append(", witeboard=")
+				.append(witeBoard).append("]");
 		return builder.toString();
 	}
 
@@ -135,4 +143,11 @@ public class Message {
 		this.roomInfo = roomInfo;
 	}
 
+	public WiteBoard getWiteboard() {
+		return witeBoard;
+	}
+
+	public void setWiteboard(WiteBoard witeBoard) {
+		this.witeBoard = witeBoard;
+	}
 }

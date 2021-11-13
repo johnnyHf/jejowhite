@@ -18,10 +18,9 @@ function initSettings() {
     })
     // 主题颜色
     $(SelectorUtil.get("theme_btn")).bind("click", function (e){
-        $(this).toggleClass("toolbar-menu-popover-dark-mode-active");
-        var themeColor = $(this).hasClass("toolbar-menu-popover-dark-mode-active") ? "#222222" : "#ffffff";
+        var themeColor = $(this).hasClass("toolbar-menu-popover-dark-mode-active") ? "#ffffff" : "#222222";
         SettingUtil.changeTheme(themeColor);
-        OnlineAction.changeTheme(themeColor);
+        OnlineAction.sendMsg(window.WITE_BOARD_ENUM.MSG_UPDATE_THEME_COLOR, {"color":themeColor});
     });
     // TODO 形状检测
     $(SelectorUtil.get("shape_detection_btn")).bind("click", function (e){
